@@ -1,0 +1,281 @@
+/* Tổng quan trang web để bớt đơn điệu */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Nền màu gradient nhẹ nhàng chéo góc */
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Vùng chứa nội dung chính ở giữa trang */
+.container {
+    text-align: center;
+    background: white;
+    padding: 50px 70px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Tiêu đề chính */
+h1 {
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+/* Đoạn văn mô tả */
+p {
+    color: #7f8c8d;
+    margin-bottom: 40px;
+    font-size: 16px;
+}
+
+/* Lưới chứa các nút bấm */
+.buttons-grid {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Base style chung cho tất cả các nút (định dạng cơ bản không bao gồm hiệu ứng riêng) */
+.btn {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px; /* Bo góc mặc định */
+    cursor: pointer; /* Đổi con trỏ thành hình bàn tay khi chỉ vào */
+    font-size: 16px;
+    font-weight: bold;
+    color: white; /* Màu chữ mặc định */
+    position: relative; /* Dùng làm gốc tọa độ cho các pseudo-element như ::before, ::after */
+    overflow: hidden; /* Dùng để giấu những phần hiệu ứng bị tràn ra ngoài viền nút */
+    z-index: 1; /* Đảm bảo chữ luôn nổi lên trên hiệu ứng nền */
+}
+
+/* ===================================================
+   NÚT 1: BAY LÊN & ĐỔ BÓNG
+   - Mô tả: Khi hover, nút di chuyển lên trên (translateY) và bóng đổ đậm hơn để tạo cảm giác chiều sâu 3D.
+   - Hàm thời gian: Sử dụng cubic-bezier để chuyển động tự nhiên hơn.
+=====================================================*/
+.btn-1 {
+    background-color: #007bff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Bóng mặc định nhạt */
+    /* transition khai báo thuộc tính cần áp dụng hiệu ứng và thời gian diễn ra */
+    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), 
+                box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn-1:hover {
+    transform: translateY(-6px); /* Nâng trục Y lên 6px */
+    box-shadow: 0 12px 24px rgba(0, 123, 255, 0.4); /* Bóng cùng tông màu xanh đậm hơn */
+}
+
+/* ===================================================
+   NÚT 2: PHÓNG TO NHẸ
+   - Mô tả: Nút tự động scale (phóng to) kích thước tổng thể lên 10% và chuyển màu nền xanh lá đậm.
+=====================================================*/
+.btn-2 {
+    background-color: #28a745;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-2:hover {
+    transform: scale(1.1); /* Phóng to lên 10% (1.1 lần kích thước gốc) */
+    background-color: #218838; /* Đổi sang màu xanh lá đậm */
+    box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+}
+
+/* ===================================================
+   NÚT 3: TRƯỢT MÀU NỀN
+   - Mô tả: Ban đầu trong suốt chỉ có viền. Hover vào sẽ có khối màu đỏ trượt từ ngoài vào.
+=====================================================*/
+.btn-3 {
+    background-color: transparent; /* Nền trong suốt */
+    color: #e74c3c;
+    border: 2px solid #e74c3c; /* Khung viền đỏ */
+    transition: color 0.4s ease; /* Hiệu ứng đổi màu chữ */
+}
+
+/* Tạo một khối màu ảo nằm ẩn hoàn toàn ở bên trái (-100%) */
+.btn-3::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%; /* Đẩy khối màu ra khỏi nút về bên trái */
+    width: 100%;
+    height: 100%;
+    background-color: #e74c3c;
+    transition: left 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    z-index: -1; /* Nằm dưới text để không che mất chữ */
+}
+
+.btn-3:hover {
+    color: white; /* Đổi màu chữ sang trắng để dễ đọc trên nền đỏ */
+}
+
+.btn-3:hover::before {
+    left: 0; /* Trượt khối màu ảo vào vị trí trung tâm (che kín nút) */
+}
+
+/* ===================================================
+   NÚT 4: PHÁT SÁNG ĐỘNG (GRADIENT ANIMATION)
+   - Mô tả: Dùng gradient 3 màu. Kích thước background phóng to 200% và chạy tự động trượt tới lui.
+=====================================================*/
+.btn-4 {
+    /* Tạo dải màu gradient từ tím sang xanh dương */
+    background: linear-gradient(45deg, #ff00cc, #3333ff, #00d2ff);
+    background-size: 200% 200%; /* Phóng to nền để có khoảng trống cho nó di chuyển */
+    animation: gradientShift 4s ease infinite; /* Gọi keyframe chạy liên tục (infinite) */
+    transition: all 0.3s ease;
+}
+
+.btn-4:hover {
+    transform: translateY(-3px) scale(1.05); /* Vừa nâng lên vừa phóng to một chút */
+    box-shadow: 0 10px 25px rgba(255, 0, 204, 0.6); /* Đổ bóng màu tím hồng (Glow) */
+}
+
+/* Keyframes Animation làm cho tọa độ nền gradient trượt qua lại */
+@keyframes gradientShift {
+    0% { background-position: 0% 50%; } /* Bắt đầu ở cạnh trái */
+    50% { background-position: 100% 50%; } /* Trượt sang cạnh phải */
+    100% { background-position: 0% 50%; } /* Trượt về lại trái */
+}
+
+/* ===================================================
+   NÚT 5: ĐỔI HÌNH DẠNG (MORPHING SHAPE)
+   - Mô tả: Thay đổi bán kính bo góc (border-radius) tạo hiệu ứng bẻ cong hình dáng chiếc lá.
+=====================================================*/
+.btn-5 {
+    background-color: #f39c12; /* Màu cam vàng */
+    /* Tạo hình dạng chiếc lá ban đầu: Bo tròn góc trên-trái và dưới-phải */
+    border-radius: 30px 0px 30px 0px; 
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1); /* Chuyển động mượt mà 0.5 giây */
+}
+
+.btn-5:hover {
+    background-color: #d68910;
+    /* Đảo ngược hình dạng: Bo tròn góc trên-phải và dưới-trái */
+    border-radius: 0px 30px 0px 30px;
+    transform: scale(1.05);
+}
+
+/* ===================================================
+   NÚT 6: ĐỔI MÀU CHỮ & PHÁT SÁNG (NEON TEXT)
+   - Mô tả: Nút tối màu với chữ xám. Khi hover, chữ chuyển sang xanh Cyan rực rỡ và phát sáng nhờ text-shadow.
+=====================================================*/
+.btn-6 {
+    background-color: #2c3e50; /* Nền tối nhạt */
+    color: #bdc3c7; /* Chữ màu xám nhạt (như đèn chưa bật) */
+    transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.btn-6:hover {
+    color: #00ffff; /* Đổi màu chữ sang Cyan sặc sỡ (như đèn vừa bật) */
+    /* Tạo 2 lớp text-shadow để chữ toả sáng ra xung quanh */
+    text-shadow: 0 0 8px rgba(0, 255, 255, 0.8), 
+                 0 0 20px rgba(0, 255, 255, 0.5); 
+    transform: translateY(-2px);
+}
+
+/* ===================================================
+   NÚT 7: ĐỔI MÀU NỀN (BACKGROUND COLOR FADE)
+   - Mô tả: Nút chuyển từ màu Tím sang màu Đỏ san hô một cách mượt mà.
+=====================================================*/
+.btn-7 {
+    background-color: #9b59b6; /* Tím nhạt ban đầu */
+    transition: background-color 0.4s ease, transform 0.2s ease;
+}
+
+.btn-7:hover {
+    background-color: #e74c3c; /* Từ từ chuyển sang Đỏ san hô (coral) */
+    transform: translateY(-3px);
+    box-shadow: 0 6px 12px rgba(231, 76, 60, 0.3); /* Bóng đổ tiệp màu đỏ */
+}
+
+/* ===================================================
+   NÚT 8: NÚT BẤM 3D CƠ HỌC (3D PUSH BUTTON)
+   - Mô tả: Tạo cảm giác nút vật lý. Có phần viền dưới dày. Khi hover lún nhẹ, khi click (active) lún sâu và mất viền.
+=====================================================*/
+.btn-8 {
+    background-color: #f1c40f; /* Vàng */
+    color: #333; /* Chữ tối màu cho dễ đọc */
+    border-bottom: 5px solid #d4ac0d; /* Phần đế viền dưới tối màu hơn tạo độ nổi 3D */
+    transition: all 0.1s ease; /* Thời gian chuyển đổi cực ngắn để tạo cảm giác bấm thật */
+}
+
+.btn-8:hover {
+    transform: translateY(2px); /* Lún xuống 2px */
+    border-bottom-width: 3px; /* Đế mỏng đi tương ứng với độ lún */
+}
+
+/* Trạng thái :active là khi người dùng đang giữ chuột click vào nút */
+.btn-8:active {
+    transform: translateY(5px); /* Lún xuống hoàn toàn */
+    border-bottom-width: 0px; /* Đế bị đè phẳng */
+}
+
+/* ===================================================
+   NÚT 9: SÓNG LAN TỎA (PULSE RIPPLE)
+   - Mô tả: Khi hover, sẽ có một vòng viền liên tục tỏa ra xung quanh giống như radar sóng âm.
+=====================================================*/
+.btn-9 {
+    background-color: #e67e22; /* Cam */
+}
+
+/* Tạo một vòng khung vô hình có cùng kích thước với nút */
+.btn-9::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+    border: 2px solid #e67e22; /* Cùng màu cam với nút */
+    border-radius: 8px; /* Khớp với độ bo tròn của nút ban đầu */
+    transform: translate(-50%, -50%); /* Căn giữa hoàn hảo so với tâm nút */
+    opacity: 0; /* Ẩn đi khi bình thường */
+    z-index: -1; /* Đảm bảo vòng sóng nằm dưới chữ và nền (không che nút) */
+}
+
+/* Khi hover thì kích hoạt animation vòng sóng tỏa ra liên tục (infinite) */
+.btn-9:hover::after {
+    animation: pulseRing 1s infinite;
+}
+
+/* Keyframes cho hiệu ứng sóng: Bắt đầu từ viền nút, to dần ra và mờ đi */
+@keyframes pulseRing {
+    0% { width: 100%; height: 100%; opacity: 0.8; }
+    100% { width: 130%; height: 160%; opacity: 0; } /* Phình to ra theo chiều rộng/cao rồi biến mất */
+}
+
+/* ===================================================
+   NÚT 10: ÁNH SÁNG LƯỚT CHÉO (SHINE SWEEP)
+   - Mô tả: Khi hover, một vệt sáng trắng bị làm nghiêng sẽ lướt thật nhanh qua mặt nút.
+=====================================================*/
+.btn-10 {
+    background-color: #34495e; /* Màu xanh xám đậm */
+    /* Thuộc tính overflow: hidden; đã được định nghĩa ở .btn chung giúp vệt sáng bị cắt đi khi trượt ra ngoài nút */
+}
+
+/* Tạo hình vệt sáng trắng mờ */
+.btn-10::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -150%; /* Giấu tít lề bên trái, nằm ngoài tầm nhìn */
+    width: 50%; /* Độ rộng của vệt sáng bằng một nửa nút */
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3); /* Trắng trong suốt */
+    transform: skewX(-25deg); /* Làm nghiêng vệt sáng một góc 25 độ */
+    transition: left 0.6s ease; /* Lướt qua trong 0.6s */
+    z-index: 2; /* Nổi lên đè nhẹ lên cả chữ, tạo hiệu ứng chói sáng */
+}
+
+.btn-10:hover::before {
+    left: 150%; /* Trượt vệt sáng từ bên trái sang tít lề phải */
+}
